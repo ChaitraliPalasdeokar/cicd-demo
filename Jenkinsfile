@@ -21,6 +21,11 @@ pipeline {
                     sh "docker tag ${user}/heloapp:${currentBuild.number} ${user}/heloapp:latest"
                 }
             }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/site/**/*.*'
+                }
+            }
             
         }
         stage ('Push to registry') {
@@ -42,9 +47,5 @@ pipeline {
             }
         }
     }  
-    post {
-        always {
-            archiveArtifacts artifacts: 'target/site/**/*.*'
-        }
-    }
+    
 } 
