@@ -44,7 +44,7 @@ pipeline {
     }  
     post {
         always {
-            archiveArtifacts artifacts: 'target/site/**/*.*',
+            archiveArtifacts artifacts: 'target/site/**/*.*'
         }
     }
 } 
