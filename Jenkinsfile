@@ -11,14 +11,17 @@ pipeline {
             }
         }
         */
-        stage ('Build') {  
+        stage ('Build') {
+              
             when { expression { return params.Build }} 
             steps {
+                sh 'mvn site'
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh "docker build -t ${user}/heloapp:${currentBuild.number} ."
                     sh "docker tag ${user}/heloapp:${currentBuild.number} ${user}/heloapp:latest"
                 }
             }
+            
         }
         stage ('Push to registry') {
             when { expression { return params.Build }} 
@@ -39,4 +42,9 @@ pipeline {
             }
         }
     }  
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/site/**/*.*',
+        }
+    }
 } 
